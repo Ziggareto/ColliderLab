@@ -7,6 +7,7 @@ public class ShooterScript : MonoBehaviour {
 	public GameObject projectile;
 	public float timeToReload;
 	public float fireSpeed;
+	public float bulletLifespan;
 
 	float reloadTimer = 0;
 
@@ -35,7 +36,7 @@ public class ShooterScript : MonoBehaviour {
 					GameObject newProjectile = (GameObject) Instantiate (projectile, transform.position, transform.rotation);
 					newProjectile.GetComponent<Rigidbody2D> ().velocity = FireDirection;
 					//If the projectile exists after 5 seconds, destroy it
-					Destroy (newProjectile, 5);
+					Destroy (newProjectile, bulletLifespan);
 				}
 			}
 		} else {
@@ -46,10 +47,20 @@ public class ShooterScript : MonoBehaviour {
 	void OnTriggerEnter2D(Collider2D coll) {
         //TASK 3
         //HINT: Use coll.gameObject to get a reference to coll's GameObject
+		if (isPlayer(coll.gameObject)) {
+			Debug.Log("Adding player: " + coll.gameObject.ToString());
+			playerList.Add(coll.gameObject);
+			Debug.Log("Player list: " + playerList.ToString());
+		}
 	}
 
 	void OnTriggerExit2D(Collider2D coll) {
         //TASK 3
+		if (isPlayer(coll.gameObject)) {
+			Debug.Log("Removing player: " + coll.gameObject.ToString());
+			playerList.Remove(coll.gameObject);
+			Debug.Log("Player list: " + playerList.ToString());
+		}
     }
 
 	//Returns whether or not the Game Object is the Player Character
